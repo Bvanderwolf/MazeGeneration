@@ -27,15 +27,36 @@ namespace BWolf.MazeGeneration
         [SerializeField, Tooltip("If slow mode is set to true, the generation will wait a video frame each step resulting in a slower process")]
         private bool slowMode = true;
 
+        [SerializeField]
+        private bool autoPlay = false;
+
         [SerializeField, Tooltip("If debug mode is set to true, some algorithms make cells show additional features")]
         private bool debugMode = false;
 
         [Header("Scene References")]
+        [Space]
         [SerializeField]
         private InputField inputFieldWidth = null;
 
         [SerializeField]
         private InputField inputFieldHeight = null;
+
+        [SerializeField]
+        private InputField inputFieldStartX = null;
+
+        [SerializeField]
+        private InputField inputFieldStartY = null;
+
+        [Space]
+        [SerializeField]
+        private Toggle toggleSlowMode = null;
+
+        [SerializeField]
+        private Toggle toggleAutoPlay = null;
+
+        [Space]
+        [SerializeField]
+        private Text textAlgorithm = null;
 
         [Header("Project References")]
         [SerializeField]
@@ -60,7 +81,7 @@ namespace BWolf.MazeGeneration
 
         private void Awake()
         {
-            SetupInputFields();
+            InitializeUserInterface();
             CreateGenerators();
             Generate();
         }
@@ -71,19 +92,29 @@ namespace BWolf.MazeGeneration
             inputFieldHeight.onEndEdit.RemoveListener(OnHeightEndEdit);
         }
 
+        private void OnValidate()
+        {
+            UpdateAlgorithmText();
+            UpdateToggles();
+            UpdateInputFields();
+        }
+
         /// <summary>
         /// Sets up the input field values and listeners
         /// </summary>
-        private void SetupInputFields()
+        private void InitializeUserInterface()
         {
             _width = width;
             _height = height;
 
-            inputFieldWidth.text = _width.ToString();
-            inputFieldHeight.text = _height.ToString();
-
             inputFieldWidth.onEndEdit.AddListener(OnWidthEndEdit);
             inputFieldHeight.onEndEdit.AddListener(OnHeightEndEdit);
+
+            inputFieldStartX.onEndEdit.AddListener(OnStartXEndEdit);
+            inputFieldStartY.onEndEdit.AddListener(OnStartYEndEdit);
+
+            toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
+            toggleAutoPlay.onValueChanged.AddListener(OnAutoPlayToggled);
         }
 
         /// <summary>Creates all available generators for each algorithm</summary>
@@ -177,10 +208,115 @@ namespace BWolf.MazeGeneration
             }
         }
 
+        /// <summary>
+        /// Stores given user start x input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnStartXEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                start.x = int.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Stores given user start y input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnStartYEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                start.y = int.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Updates the slow mode function
+        /// </summary>
+        private void OnSlowModeToggled(bool value)
+        {
+            slowMode = value;
+        }
+
+        /// <summary>
+        /// Updates the autoplay function
+        /// </summary>
+        private void OnAutoPlayToggled(bool value)
+        {
+            autoPlay = value;
+        }
+
+        /// <summary>
+        /// Cycles through the algorithm values to set the algorithm used for generation either to the next or previous one based on given "forward" value
+        /// </summary>
+        /// <param name="forward"></param>
+        public void CycleThroughAlgorithmValues(bool forward)
+        {
+            if (forward)
+            {
+                int next = (int)algorithm + 1;
+                if (next == System.Enum.GetValues(typeof(Algorithm)).Length)
+                {
+                    next = 0;
+                }
+
+                algorithm = (Algorithm)next;
+            }
+            else
+            {
+                int previous = (int)algorithm - 1;
+                if (previous < 0)
+                {
+                    previous = System.Enum.GetValues(typeof(Algorithm)).Length - 1;
+                }
+
+                algorithm = (Algorithm)previous;
+            }
+
+            UpdateAlgorithmText();
+        }
+
+        /// <summary>
+        /// Updates the shown algorithm text in the User Interface
+        /// </summary>
+        private void UpdateAlgorithmText()
+        {
+            textAlgorithm.text = algorithm.ToString();
+        }
+
+        /// <summary>
+        /// Updates the shown toggle states in the User Interface
+        /// </summary>
+        private void UpdateToggles()
+        {
+            toggleSlowMode.isOn = slowMode;
+            toggleAutoPlay.isOn = autoPlay;
+        }
+
+        /// <summary>
+        /// Updates the shown input field text in the User Interface
+        /// </summary>
+        private void UpdateInputFields()
+        {
+            inputFieldWidth.text = width.ToString();
+            inputFieldHeight.text = height.ToString();
+
+            inputFieldStartX.text = start.x.ToString();
+            inputFieldStartY.text = start.y.ToString();
+        }
+
         /// <summary>Resets the isGenerating flag</summary>
         private void OnGenerationRoutineCompleted()
         {
             isGenerating = false;
+
+            if (autoPlay && slowMode)
+            {
+                CycleThroughAlgorithmValues(true);
+                Generate();
+            }
         }
 
         /// <summary>Returns a list of unvisited cells adjecent to given cell</summary>
