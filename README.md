@@ -25,3 +25,7 @@ A project containing various maze generation methods using multiple different al
 [8] [James-Buck (The Bucklog) - Hunt And Kill](http://weblog.jamisbuck.org/2011/1/24/maze-generation-hunt-and-kill-algorithm)  
 [9] [James-Buck (The Bucklog) - Growing Tree](http://weblog.jamisbuck.org/2011/1/27/maze-generation-growing-tree-algorithm)  
 [10] [James-Buck (The Bucklog) - Sidewinder](http://weblog.jamisbuck.org/2011/2/3/maze-generation-sidewinder-algorithm)  
+
+## Icon Authors
+Some icons are retreived from [www.flaticon.com](https://www.flaticon.com/ "Flaticon"):  
+- Maze Icon - [Pixel perfect](https://www.flaticon.com/authors/pixel-perfect "Pixel perfect") 
