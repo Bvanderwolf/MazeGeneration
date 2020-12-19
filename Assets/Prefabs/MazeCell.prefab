@@ -192,6 +192,7 @@ Transform:
   - {fileID: 5443572602427981344}
   - {fileID: 7481021432218948758}
   - {fileID: 4442320395549444041}
+  - {fileID: 1617748212949375781}
   m_Father: {fileID: 5911810240524364519}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -229,6 +230,87 @@ Transform:
   m_Father: {fileID: 5911810240524364519}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3382392827357366228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617748212949375781}
+  - component: {fileID: 2010623113712354846}
+  m_Layer: 0
+  m_Name: ExitOrEntry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1617748212949375781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3382392827357366228}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_Children: []
+  m_Father: {fileID: 8159051170834737796}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &2010623113712354846
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3382392827357366228}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_Sprite: {fileID: 21300000, guid: 64008f0f5a77bfa419725a117139662c, type: 3}
+  m_Color: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1.98, y: 1.91}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &4399395659817590508
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +607,7 @@ MonoBehaviour:
   setNumberText: {fileID: 5315230305188048747}
   directionArrow: {fileID: 7481021432218948758}
   step: {fileID: 7279829235087403643}
+  exitOrEntryIndicator: {fileID: 2010623113712354846}
   topWall: {fileID: 6306556948314321461}
   bottomWall: {fileID: 3023012931863194387}
   leftWall: {fileID: 2936904464896778914}
@@ -1146,15 +1229,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12a607c149a2c20498e309205731da19, type: 3}
---- !u!4 &7375734756504093439 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 843167118679921978, guid: 12a607c149a2c20498e309205731da19,
-    type: 3}
-  m_PrefabInstance: {fileID: 7919676324700559301}
-  m_PrefabAsset: {fileID: 0}
 --- !u!212 &6306556948314321461 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 4210077893148206576, guid: 12a607c149a2c20498e309205731da19,
+    type: 3}
+  m_PrefabInstance: {fileID: 7919676324700559301}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7375734756504093439 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 843167118679921978, guid: 12a607c149a2c20498e309205731da19,
     type: 3}
   m_PrefabInstance: {fileID: 7919676324700559301}
   m_PrefabAsset: {fileID: 0}

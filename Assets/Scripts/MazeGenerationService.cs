@@ -1,4 +1,5 @@
 ﻿using BWolf.MazeGeneration.Generators;
+using BWolf.MazeSolving;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,13 +55,24 @@ namespace BWolf.MazeGeneration
         [SerializeField]
         private Toggle toggleAutoPlay = null;
 
+        [SerializeField]
+        private Toggle toggleDebugMode = null;
+
         [Space]
         [SerializeField]
         private Text textAlgorithm = null;
 
+        [Space]
+        [SerializeField]
+        private MazeSolvingService solvingService = null;
+
         [Header("Project References")]
         [SerializeField]
         private GameObject prefabMazeCell = null;
+
+        private Dictionary<Algorithm, MazeGenerator> generators = new Dictionary<Algorithm, MazeGenerator>();
+        private int _width;
+        private int _height;
 
         public MazeCell[,] Cells { get; private set; }
 
@@ -72,12 +84,21 @@ namespace BWolf.MazeGeneration
             get { return Cells[start.x, start.y]; }
         }
 
-        private Dictionary<Algorithm, MazeGenerator> generators = new Dictionary<Algorithm, MazeGenerator>();
+        /// <summary>
+        /// If debug mode is set to true, some algorithms make cells show additional features
+        /// </summary>
+        public bool DebugMode
+        {
+            get
+            {
+                return debugMode;
+            }
+        }
 
-        private bool isGenerating;
-
-        private int _width;
-        private int _height;
+        /// <summary>
+        /// Returns whether a generator is currently at work generating the maze
+        /// </summary>
+        public bool IsGenerating { get; private set; }
 
         private void Awake()
         {
@@ -115,6 +136,7 @@ namespace BWolf.MazeGeneration
 
             toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
             toggleAutoPlay.onValueChanged.AddListener(OnAutoPlayToggled);
+            toggleDebugMode.onValueChanged.AddListener(OnDebugModeToggled);
         }
 
         /// <summary>Creates all available generators for each algorithm</summary>
@@ -123,10 +145,10 @@ namespace BWolf.MazeGeneration
             generators.Add(Algorithm.AldousBroder, new AldousBroderGenerator());
             generators.Add(Algorithm.RecursiveBacktracking, new RecursiveBacktrackingGenerator());
             generators.Add(Algorithm.BinaryTree, new BinaryTreeGenerator());
-            generators.Add(Algorithm.Kruskal, new KruskalGenerator(debugMode));
+            generators.Add(Algorithm.Kruskal, new KruskalGenerator());
             generators.Add(Algorithm.Prim, new PrimGenerator());
-            generators.Add(Algorithm.Eller, new EllerGenerator(debugMode));
-            generators.Add(Algorithm.Wilson, new WilsonGenerator(debugMode));
+            generators.Add(Algorithm.Eller, new EllerGenerator());
+            generators.Add(Algorithm.Wilson, new WilsonGenerator());
             generators.Add(Algorithm.HuntAndKil, new HuntAndKillGenerator());
             generators.Add(Algorithm.PrimsGrowingTree, new PrimsGrowingTreeGenerator());
             generators.Add(Algorithm.Sidewinder, new SidewinderGenerator());
@@ -142,7 +164,7 @@ namespace BWolf.MazeGeneration
         /// </summary>
         public void Generate()
         {
-            if (isGenerating)
+            if (IsGenerating || solvingService.IsSolving)
             {
                 return;
             }
@@ -175,7 +197,7 @@ namespace BWolf.MazeGeneration
             //create the maze based on the slowMode flag and the algorithm
             if (slowMode)
             {
-                isGenerating = true;
+                IsGenerating = true;
                 StartCoroutine(generators[algorithm].CreateMazeRoutine(this));
             }
             else
@@ -249,6 +271,14 @@ namespace BWolf.MazeGeneration
         }
 
         /// <summary>
+        /// Updates the debugMode function
+        /// </summary>
+        private void OnDebugModeToggled(bool value)
+        {
+            debugMode = value;
+        }
+
+        /// <summary>
         /// Cycles through the algorithm values to set the algorithm used for generation either to the next or previous one based on given "forward" value
         /// </summary>
         /// <param name="forward"></param>
@@ -293,6 +323,7 @@ namespace BWolf.MazeGeneration
         {
             toggleSlowMode.isOn = slowMode;
             toggleAutoPlay.isOn = autoPlay;
+            toggleDebugMode.isOn = debugMode;
         }
 
         /// <summary>
@@ -310,7 +341,7 @@ namespace BWolf.MazeGeneration
         /// <summary>Resets the isGenerating flag</summary>
         private void OnGenerationRoutineCompleted()
         {
-            isGenerating = false;
+            IsGenerating = false;
 
             if (autoPlay && slowMode)
             {

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using BWolf.MazeSolving;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace BWolf.MazeGeneration
 {
@@ -13,6 +15,9 @@ namespace BWolf.MazeGeneration
 
         [SerializeField]
         private GameObject step = null;
+
+        [SerializeField]
+        private SpriteRenderer exitOrEntryIndicator = null;
 
         [Header("Walls")]
         [SerializeField]
@@ -63,6 +68,80 @@ namespace BWolf.MazeGeneration
             ShowSetNumber(false);
 
             ShowDirectionArrow(false);
+
+            ShowAsExitOrEntry(false, null);
+        }
+
+        /// <summary>
+        /// Shows or hides cell as exit or entry based on given values
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="sprite"></param>
+        public void ShowAsExitOrEntry(bool value, Sprite sprite)
+        {
+            exitOrEntryIndicator.gameObject.SetActive(value);
+            exitOrEntryIndicator.sprite = sprite;
+        }
+
+        /// <summary>
+        /// Mark this maze cell as entry, marking a wall as a passage towards outside of the maze
+        /// </summary>
+        public void MarkAsEntry(MazeSolvingService solvingService)
+        {
+            //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
+            List<SpriteRenderer> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
+            edgewalls[Random.Range(0, edgewalls.Count)].color = colorAsPassage;
+
+            //show entry on cell
+            ShowAsExitOrEntry(true, solvingService.EntrySprite);
+        }
+
+        /// <summary>
+        /// Mark this maze cell as exits, marking a wall as a passage towards outside of the maze
+        /// </summary>
+        public void MarkAsExit(MazeSolvingService solvingService)
+        {
+            //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
+            List<SpriteRenderer> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
+            edgewalls[Random.Range(0, edgewalls.Count)].color = colorAsPassage;
+
+            //show exit on cell
+            ShowAsExitOrEntry(true, solvingService.ExitSprite);
+        }
+
+        /// <summary>
+        /// Returns a list of spriterenders of the walls of this cell that are on the edge of the maze
+        /// </summary>
+        /// <param name="gridWidth"></param>
+        /// <param name="gridHeight"></param>
+        /// <returns></returns>
+        private List<SpriteRenderer> GetEdgeWalls(int gridWidth, int gridHeight)
+        {
+            List<SpriteRenderer> edgewalls = new List<SpriteRenderer>();
+
+            if (MazeX == 0)
+            {
+                //cell is on the left edge of the maze
+                edgewalls.Add(leftWall);
+            }
+            else if (MazeX == gridWidth - 1)
+            {
+                //cell is on the right edge of the maze
+                edgewalls.Add(rightWall);
+            }
+
+            if (MazeY == 0)
+            {
+                //cell is on the top edge of the maze
+                edgewalls.Add(bottomWall);
+            }
+            else if (MazeY == gridHeight - 1)
+            {
+                //cell is on the bottom edge of the maze
+                edgewalls.Add(topWall);
+            }
+
+            return edgewalls;
         }
 
         /// <summary>

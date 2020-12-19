@@ -7,13 +7,6 @@ namespace BWolf.MazeGeneration.Generators
 {
     public class KruskalGenerator : MazeGenerator
     {
-        private bool debugMode;
-
-        public KruskalGenerator(bool debugMode)
-        {
-            this.debugMode = debugMode;
-        }
-
         /// <summary>
         /// Creates a maze by linking cells using Kruskal's algorithm
         /// </summary>
@@ -21,7 +14,7 @@ namespace BWolf.MazeGeneration.Generators
         public override void CreateMaze(MazeGenerationService service)
         {
             //assign each maze cell a number indicating which set it belongs to
-            AssignSetNumbers(service.Cells);
+            AssignSetNumbers(service.Cells, service.DebugMode);
 
             //create data structures necessary for algorithm to work
             MazeCell[] cells = service.Cells.Cast<MazeCell>().ToArray();
@@ -70,7 +63,7 @@ namespace BWolf.MazeGeneration.Generators
         public override IEnumerator CreateMazeRoutine(MazeGenerationService service)
         {
             //assign each maze cell a number indicating which set it belongs to
-            AssignSetNumbers(service.Cells);
+            AssignSetNumbers(service.Cells, service.DebugMode);
 
             //create data structures necessary for algorithm to work
             MazeCell[] cells = service.Cells.Cast<MazeCell>().ToArray();
@@ -119,7 +112,7 @@ namespace BWolf.MazeGeneration.Generators
         /// Assigns given cells a set number based on their position
         /// </summary>
         /// <param name="cells"></param>
-        private void AssignSetNumbers(MazeCell[,] cells)
+        private void AssignSetNumbers(MazeCell[,] cells, bool debugMode)
         {
             int count = 0;
             foreach (MazeCell cell in cells)

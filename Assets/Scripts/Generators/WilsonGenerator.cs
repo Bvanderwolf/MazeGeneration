@@ -7,13 +7,6 @@ namespace BWolf.MazeGeneration.Generators
 {
     public class WilsonGenerator : MazeGenerator
     {
-        private bool debugMode;
-
-        public WilsonGenerator(bool debugMode)
-        {
-            this.debugMode = debugMode;
-        }
-
         /// <summary>
         /// Creates a maze by linking cells using Wilson's algorithm
         /// </summary>
@@ -149,7 +142,7 @@ namespace BWolf.MazeGeneration.Generators
 
             //get the direction relative to the walker so we can store it as a record
             Vector2Int direction = unvisitedCell.GetDirectionRelative(walker);
-            if (debugMode)
+            if (service.DebugMode)
             {
                 unvisitedCell.SetDirectionArrow(walker);
                 unvisitedCell.ShowDirectionArrow(true);
@@ -166,7 +159,7 @@ namespace BWolf.MazeGeneration.Generators
                 //pick a random neighbour, and record the direction from the walker to it
                 MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
                 direction = walker.GetDirectionRelative(randomNeighbour);
-                if (debugMode)
+                if (service.DebugMode)
                 {
                     walker.SetDirectionArrow(randomNeighbour);
                     walker.ShowDirectionArrow(true);
@@ -181,7 +174,7 @@ namespace BWolf.MazeGeneration.Generators
                 {
                     //if the random neighbour is visited, carve out a path using the records and clear the records list
                     MarkRecordAsVisitedRecursive(records[0], records, service, visited);
-                    if (debugMode)
+                    if (service.DebugMode)
                     {
                         records.ForEach(record => record.Key.ShowDirectionArrow(false));
                     }

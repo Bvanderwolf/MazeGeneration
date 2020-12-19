@@ -7,13 +7,6 @@ namespace BWolf.MazeGeneration.Generators
 {
     public class EllerGenerator : MazeGenerator
     {
-        private bool debugMode;
-
-        public EllerGenerator(bool debugMode)
-        {
-            this.debugMode = debugMode;
-        }
-
         /// <summary>
         /// Creates a maze by linking cells using Eller's algorithm
         /// </summary>
@@ -25,7 +18,7 @@ namespace BWolf.MazeGeneration.Generators
             MazeCell[] cells = gridcells.Cast<MazeCell>().ToArray();
 
             //assign maze cells their set numbers
-            AssignSetNumbers(gridcells);
+            AssignSetNumbers(gridcells, service.DebugMode);
 
             for (int y = 0; y < gridcells.GetLength(1); y++)
             {
@@ -66,7 +59,7 @@ namespace BWolf.MazeGeneration.Generators
             MazeCell[] cells = gridcells.Cast<MazeCell>().ToArray();
 
             //assign maze cells their set numbers
-            AssignSetNumbers(gridcells);
+            AssignSetNumbers(gridcells, service.DebugMode);
 
             for (int y = 0; y < gridcells.GetLength(1); y++)
             {
@@ -103,7 +96,7 @@ namespace BWolf.MazeGeneration.Generators
         /// Assigns the first rowgiven cells a set number based on their position
         /// </summary>
         /// <param name="cells"></param>
-        private void AssignSetNumbers(MazeCell[,] cells)
+        private void AssignSetNumbers(MazeCell[,] cells, bool debugMode)
         {
             int count = 0;
             for (int y = 0; y < cells.GetLength(1); y++)
