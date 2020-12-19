@@ -39,9 +39,9 @@ namespace BWolf.MazeGeneration.Generators
                     neighbour.MarkAsVisited();
                     visited.Add(neighbour);
 
-                    //create a link between the cell and its neighbour
-                    newest.Link(neighbour);
-                    neighbour.Link(newest);
+                    //create passage between newest and neighbour
+                    newest.CreatePassage(neighbour);
+                    neighbour.CreatePassage(newest);
 
                     //push the neighbour to the stack
                     stack.Push(neighbour);
@@ -88,9 +88,9 @@ namespace BWolf.MazeGeneration.Generators
                     neighbour.MarkAsVisited();
                     visited.Add(neighbour);
 
-                    //create a link between the cell and its neighbour
-                    newest.Link(neighbour);
-                    neighbour.Link(newest);
+                    //create passage between newest and neighbour
+                    newest.CreatePassage(neighbour);
+                    neighbour.CreatePassage(newest);
 
                     //push the neighbour to the stack
                     stack.Push(neighbour);

@@ -24,9 +24,9 @@ namespace BWolf.MazeGeneration.Generators
                     //pick a random neighbour
                     MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
 
-                    //link it the cell with the neighbour
-                    randomNeighbour.Link(cell);
-                    cell.Link(randomNeighbour);
+                    //create passage between cell and neighbour
+                    randomNeighbour.CreatePassage(cell);
+                    cell.CreatePassage(randomNeighbour);
                 }
             }
         }
@@ -50,9 +50,9 @@ namespace BWolf.MazeGeneration.Generators
                     //pick a random neighbour
                     MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
 
-                    //link it the cell with the neighbour
-                    randomNeighbour.Link(cell);
-                    cell.Link(randomNeighbour);
+                    //create passage between cell and neighbour
+                    randomNeighbour.CreatePassage(cell);
+                    cell.CreatePassage(randomNeighbour);
                 }
 
                 yield return null;

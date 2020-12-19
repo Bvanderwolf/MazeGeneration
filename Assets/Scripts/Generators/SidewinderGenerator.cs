@@ -33,19 +33,18 @@ namespace BWolf.MazeGeneration.Generators
                     {
                         if (x + 1 < width)
                         {
-                            //if the cell east of this cell is not out of width bounds, link the cell with it
+                            //if the cell east of this cell is not out of width bounds, create passage between cell and it
                             MazeCell right = cells[x + 1, y];
-                            cell.Link(right);
-                            right.Link(cell);
+                            cell.CreatePassage(right);
+                            right.CreatePassage(cell);
                         }
                         else if (y + 1 < height)
                         {
-                            //if the cell east of this cell is out of width bounds and this is not the top row, link the cell with the cell north of it
+                            //if the cell east of this cell is out of width bounds and this is not the top row, create passage between random cell and cell north of it
                             MazeCell randomCell = set[Random.Range(0, set.Count)];
                             MazeCell top = cells[randomCell.MazeX, y + 1];
-
-                            randomCell.Link(top);
-                            top.Link(randomCell);
+                            randomCell.CreatePassage(top);
+                            top.CreatePassage(randomCell);
                         }
                     }
                     else
@@ -53,9 +52,8 @@ namespace BWolf.MazeGeneration.Generators
                         //if the random decision was not to carve east, carve north from a random cell in the set
                         MazeCell randomCell = set[Random.Range(0, set.Count)];
                         MazeCell top = cells[randomCell.MazeX, y + 1];
-
-                        randomCell.Link(top);
-                        top.Link(randomCell);
+                        randomCell.CreatePassage(top);
+                        top.CreatePassage(randomCell);
 
                         //clear the set after carving north
                         set.Clear();
@@ -93,8 +91,8 @@ namespace BWolf.MazeGeneration.Generators
                         {
                             //if the cell east of this cell is not out of width bounds, link the cell with it
                             MazeCell right = cells[x + 1, y];
-                            cell.Link(right);
-                            right.Link(cell);
+                            cell.CreatePassage(right);
+                            right.CreatePassage(cell);
                         }
                         else if (y + 1 < height)
                         {
@@ -102,8 +100,8 @@ namespace BWolf.MazeGeneration.Generators
                             MazeCell randomCell = set[Random.Range(0, set.Count)];
                             MazeCell top = cells[randomCell.MazeX, y + 1];
 
-                            randomCell.Link(top);
-                            top.Link(randomCell);
+                            randomCell.CreatePassage(top);
+                            top.CreatePassage(randomCell);
                         }
                     }
                     else
@@ -112,8 +110,8 @@ namespace BWolf.MazeGeneration.Generators
                         MazeCell randomCell = set[Random.Range(0, set.Count)];
                         MazeCell top = cells[randomCell.MazeX, y + 1];
 
-                        randomCell.Link(top);
-                        top.Link(randomCell);
+                        randomCell.CreatePassage(top);
+                        top.CreatePassage(randomCell);
 
                         //clear the set after carving north
                         set.Clear();

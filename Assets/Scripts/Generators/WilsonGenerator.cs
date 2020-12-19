@@ -50,8 +50,8 @@ namespace BWolf.MazeGeneration.Generators
                 visited.Add(unvisitedCell);
 
                 //link unvisited cell to the walker and return
-                unvisitedCell.Link(walker);
-                walker.Link(unvisitedCell);
+                unvisitedCell.CreatePassage(walker);
+                walker.CreatePassage(unvisitedCell);
                 return;
             }
 
@@ -135,8 +135,8 @@ namespace BWolf.MazeGeneration.Generators
                 visited.Add(unvisitedCell);
 
                 //link unvisited cell to the walker and break out of the routine
-                unvisitedCell.Link(walker);
-                walker.Link(unvisitedCell);
+                unvisitedCell.CreatePassage(walker);
+                walker.CreatePassage(unvisitedCell);
                 yield break;
             }
 
@@ -207,9 +207,10 @@ namespace BWolf.MazeGeneration.Generators
 
             Vector2Int direction = record.Value;
 
+            //create passage between cell and next
             MazeCell next = service.Cells[cell.MazeX + direction.x, cell.MazeY + direction.y];
-            cell.Link(next);
-            next.Link(cell);
+            cell.CreatePassage(next);
+            next.CreatePassage(cell);
 
             if (!next.IsVisited)
             {

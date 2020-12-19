@@ -33,9 +33,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomUnvisitedNeighbour.MarkAsVisited();
                     visited.Add(randomUnvisitedNeighbour);
 
-                    //link the random unvisited neighbour to the walker
-                    walker.Link(randomUnvisitedNeighbour);
-                    randomUnvisitedNeighbour.Link(walker);
+                    //create passage between neighbour and walker
+                    walker.CreatePassage(randomUnvisitedNeighbour);
+                    randomUnvisitedNeighbour.CreatePassage(walker);
 
                     //the random unvisited neighbour is now the walker
                     walker = randomUnvisitedNeighbour;
@@ -47,11 +47,11 @@ namespace BWolf.MazeGeneration.Generators
                     huntedCell.MarkAsVisited();
                     visited.Add(huntedCell);
 
-                    //fetch one of its visited neighbours and link it with the hunted cell
+                    //fetch one of its visited neighbours and create passage between hunted cell and neighbour
                     List<MazeCell> visitedNeighbours = service.GetVisitedNeighbours(huntedCell);
                     MazeCell randomVisitedNeighbour = visitedNeighbours[Random.Range(0, visitedNeighbours.Count)];
-                    huntedCell.Link(randomVisitedNeighbour);
-                    randomVisitedNeighbour.Link(huntedCell);
+                    huntedCell.CreatePassage(randomVisitedNeighbour);
+                    randomVisitedNeighbour.CreatePassage(huntedCell);
 
                     //the hunted cell is now the walker
                     walker = huntedCell;
@@ -87,9 +87,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomUnvisitedNeighbour.MarkAsVisited();
                     visited.Add(randomUnvisitedNeighbour);
 
-                    //link the random unvisited neighbour to the walker
-                    walker.Link(randomUnvisitedNeighbour);
-                    randomUnvisitedNeighbour.Link(walker);
+                    //create passage between cell and neighbour
+                    walker.CreatePassage(randomUnvisitedNeighbour);
+                    randomUnvisitedNeighbour.CreatePassage(walker);
 
                     //the random unvisited neighbour is now the walker
                     walker = randomUnvisitedNeighbour;
@@ -104,8 +104,8 @@ namespace BWolf.MazeGeneration.Generators
                     //fetch one of its visited neighbours and link it with the hunted cell
                     List<MazeCell> visitedNeighbours = service.GetVisitedNeighbours(huntedCell);
                     MazeCell randomVisitedNeighbour = visitedNeighbours[Random.Range(0, visitedNeighbours.Count)];
-                    huntedCell.Link(randomVisitedNeighbour);
-                    randomVisitedNeighbour.Link(huntedCell);
+                    huntedCell.CreatePassage(randomVisitedNeighbour);
+                    randomVisitedNeighbour.CreatePassage(huntedCell);
 
                     //the hunted cell is now the walker
                     walker = huntedCell;

@@ -221,7 +221,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 3
+  m_Text: 25
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2018,7 +2018,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 3
+  m_Text: 14
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -2426,7 +2426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   algorithm: 0
   entry: {x: 0, y: 0}
-  exit: {x: 2, y: 0}
+  exit: {x: 5, y: 5}
   generationService: {fileID: 1998413124}
   entrySprite: {fileID: 21300000, guid: 973bca4a14ec7f24890a56427a72c406, type: 3}
   exitSprite: {fileID: 21300000, guid: 64008f0f5a77bfa419725a117139662c, type: 3}
@@ -2697,7 +2697,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 3
+  m_Text: 25
 --- !u!222 &1418534277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2925,7 +2925,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 3
+  m_Text: 14
 --- !u!222 &1662524271
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3776,8 +3776,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   algorithm: 0
   start: {x: 0, y: 0}
-  width: 3
-  height: 3
+  width: 25
+  height: 14
   slowMode: 0
   autoPlay: 0
   debugMode: 0

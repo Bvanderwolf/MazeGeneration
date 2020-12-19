@@ -31,10 +31,10 @@ namespace BWolf.MazeGeneration.Generators
                     List<MazeCell> neighbours = service.GetNeighboursNotPartOfSet(cell);
                     if (neighbours.Count > 0)
                     {
-                        //pick a random neighbour not part of the cells set and link it with the cell
+                        //pick a random neighbour not part of the cells set and create passage between cell and neighbour
                         MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
-                        randomNeighbour.Link(cell);
-                        cell.Link(randomNeighbour);
+                        randomNeighbour.CreatePassage(cell);
+                        cell.CreatePassage(randomNeighbour);
 
                         //all the cells belonging to the set the random neighbour belongs to are overtaken by the cell's set
                         MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();
@@ -72,10 +72,10 @@ namespace BWolf.MazeGeneration.Generators
                     List<MazeCell> neighbours = service.GetNeighboursNotPartOfSet(cell);
                     if (neighbours.Count > 0)
                     {
-                        //pick a random neighbour not part of the cells set and link it with the cell
+                        //pick a random neighbour not part of the cells set and create passage between cell and neighbour
                         MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
-                        randomNeighbour.Link(cell);
-                        cell.Link(randomNeighbour);
+                        randomNeighbour.CreatePassage(cell);
+                        cell.CreatePassage(randomNeighbour);
 
                         //all the cells belonging to the set the random neighbour belongs to are overtaken by the cell's set
                         MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();

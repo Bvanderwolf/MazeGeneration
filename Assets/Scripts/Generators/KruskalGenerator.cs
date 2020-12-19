@@ -36,9 +36,9 @@ namespace BWolf.MazeGeneration.Generators
                     MazeCell randomNeighbour = neighbours[Random.Range(0, neighbours.Count)];
                     randomNeighbour.MarkAsVisited();
 
-                    //link the random neighbour with the random cell
-                    randomNeighbour.Link(randomCell);
-                    randomCell.Link(randomNeighbour);
+                    //create passage between random cell and neighbour
+                    randomNeighbour.CreatePassage(randomCell);
+                    randomCell.CreatePassage(randomNeighbour);
 
                     //all the cells belonging to the set the random neighbour belongs to are overtaken by the random cell's set
                     MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();
@@ -86,8 +86,8 @@ namespace BWolf.MazeGeneration.Generators
                     randomNeighbour.MarkAsVisited();
 
                     //link the random neighbour with the random cell
-                    randomNeighbour.Link(randomCell);
-                    randomCell.Link(randomNeighbour);
+                    randomNeighbour.CreatePassage(randomCell);
+                    randomCell.CreatePassage(randomNeighbour);
 
                     //all the cells belonging to the set the random neighbour belongs to are overtaken by the random cell's set
                     MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();

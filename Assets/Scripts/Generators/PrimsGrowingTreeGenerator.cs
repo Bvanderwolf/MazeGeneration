@@ -36,9 +36,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomUnvisitedNeighbour.MarkAsVisited();
                     visited.Add(randomUnvisitedNeighbour);
 
-                    //link it to the random cell from the bag
-                    randomCell.Link(randomUnvisitedNeighbour);
-                    randomUnvisitedNeighbour.Link(randomCell);
+                    //create passage between random cell and neighbour
+                    randomCell.CreatePassage(randomUnvisitedNeighbour);
+                    randomUnvisitedNeighbour.CreatePassage(randomCell);
 
                     //add the random unvisited neighbour to the bag
                     bag.Add(randomUnvisitedNeighbour);
@@ -81,9 +81,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomUnvisitedNeighbour.MarkAsVisited();
                     visited.Add(randomUnvisitedNeighbour);
 
-                    //link it to the random cell from the bag
-                    randomCell.Link(randomUnvisitedNeighbour);
-                    randomUnvisitedNeighbour.Link(randomCell);
+                    //create passage between cell and neighbour
+                    randomCell.CreatePassage(randomUnvisitedNeighbour);
+                    randomUnvisitedNeighbour.CreatePassage(randomCell);
 
                     //add the random unvisited neighbour to the bag
                     bag.Add(randomUnvisitedNeighbour);

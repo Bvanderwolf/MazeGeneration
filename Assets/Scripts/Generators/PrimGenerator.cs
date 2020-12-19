@@ -31,13 +31,13 @@ namespace BWolf.MazeGeneration.Generators
                 randomFrontierCell.MarkAsVisited();
                 frontier.Remove(randomFrontierCell);
 
-                //pick a random visited neighbour of it and link it with it
+                //pick a random visited neighbour of it and create passage between them
                 List<MazeCell> visitedNeighbours = service.GetVisitedNeighbours(randomFrontierCell);
                 if (visitedNeighbours.Count > 0)
                 {
                     MazeCell randomVisitedNeighbour = visitedNeighbours[Random.Range(0, visitedNeighbours.Count)];
-                    randomFrontierCell.Link(randomVisitedNeighbour);
-                    randomVisitedNeighbour.Link(randomFrontierCell);
+                    randomFrontierCell.CreatePassage(randomVisitedNeighbour);
+                    randomVisitedNeighbour.CreatePassage(randomFrontierCell);
                 }
 
                 //add unvisited neighbours of it to the frontier if they aren't already in it
@@ -82,8 +82,8 @@ namespace BWolf.MazeGeneration.Generators
                 if (visitedNeighbours.Count > 0)
                 {
                     MazeCell randomVisitedNeighbour = visitedNeighbours[Random.Range(0, visitedNeighbours.Count)];
-                    randomFrontierCell.Link(randomVisitedNeighbour);
-                    randomVisitedNeighbour.Link(randomFrontierCell);
+                    randomFrontierCell.CreatePassage(randomVisitedNeighbour);
+                    randomVisitedNeighbour.CreatePassage(randomFrontierCell);
                 }
 
                 //add unvisited neighbours of it to the frontier if they aren't already in it

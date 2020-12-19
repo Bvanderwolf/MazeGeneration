@@ -14,27 +14,29 @@ namespace BWolf.MazeGeneration
         private Transform directionArrow = null;
 
         [SerializeField]
-        private GameObject step = null;
+        private GameObject stepIndicator = null;
 
         [SerializeField]
         private SpriteRenderer exitOrEntryIndicator = null;
 
         [Header("Walls")]
         [SerializeField]
-        private SpriteRenderer topWall = null;
+        private MazeCellWall topWall = null;
 
         [SerializeField]
-        private SpriteRenderer bottomWall = null;
+        private MazeCellWall bottomWall = null;
 
         [SerializeField]
-        private SpriteRenderer leftWall = null;
+        private MazeCellWall leftWall = null;
 
         [SerializeField]
-        private SpriteRenderer rightWall = null;
+        private MazeCellWall rightWall = null;
 
-        private static readonly Color colorAsPassage = Color.white;
+        public static readonly Color ColorAsPassage = Color.white;
+        public static readonly Color ColorAsWall = Color.black;
+        public static readonly Color ColorAsChecked = Color.grey;
+
         private static readonly Color colorAsStep = Color.red;
-        private static readonly Color colorAtAwake = Color.black;
 
         private SpriteRenderer spriteRenderer;
 
@@ -44,6 +46,64 @@ namespace BWolf.MazeGeneration
         public int SetNumber { get; private set; }
 
         public bool IsVisited { get; private set; }
+        public bool IsChecked { get; private set; }
+
+        private const int DEAD_END_WALL_COUNT = 3;
+
+        /// <summary>
+        /// The amount of walls of this cell that are not broken
+        /// </summary>
+        private int brokenWalls
+        {
+            get
+            {
+                int count = 0;
+
+                if (topWall.IsBroken) count++;
+                if (bottomWall.IsBroken) count++;
+                if (rightWall.IsBroken) count++;
+                if (leftWall.IsBroken) count++;
+
+                return count;
+            }
+        }
+
+        private int checkedWalls
+        {
+            get
+            {
+                int count = 0;
+
+                if (topWall.IsChecked) count++;
+                if (bottomWall.IsChecked) count++;
+                if (rightWall.IsChecked) count++;
+                if (leftWall.IsChecked) count++;
+
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Is this cell a dead end
+        /// </summary>
+        public bool IsDeadEnd
+        {
+            get
+            {
+                return brokenWalls == 1;
+            }
+        }
+
+        /// <summary>
+        /// Is this cell a junction
+        /// </summary>
+        public bool IsJunction
+        {
+            get
+            {
+                return brokenWalls == 3 && checkedWalls == 0;
+            }
+        }
 
         private void Awake()
         {
@@ -56,19 +116,19 @@ namespace BWolf.MazeGeneration
         public void SetDefaultValues()
         {
             IsVisited = false;
+            IsChecked = false;
 
-            spriteRenderer.color = colorAtAwake;
+            spriteRenderer.color = ColorAsWall;
 
-            topWall.color = colorAtAwake;
-            bottomWall.color = colorAtAwake;
-            rightWall.color = colorAtAwake;
-            leftWall.color = colorAtAwake;
+            topWall.SetDefaultValues();
+            bottomWall.SetDefaultValues();
+            rightWall.SetDefaultValues();
+            leftWall.SetDefaultValues();
 
             SetSetNumber(0);
             ShowSetNumber(false);
-
             ShowDirectionArrow(false);
-
+            ShowAsStep(false);
             ShowAsExitOrEntry(false, null);
         }
 
@@ -89,8 +149,8 @@ namespace BWolf.MazeGeneration
         public void MarkAsEntry(MazeSolvingService solvingService)
         {
             //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
-            List<SpriteRenderer> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
-            edgewalls[Random.Range(0, edgewalls.Count)].color = colorAsPassage;
+            List<MazeCellWall> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
+            edgewalls[Random.Range(0, edgewalls.Count)].Break();
 
             //show entry on cell
             ShowAsExitOrEntry(true, solvingService.EntrySprite);
@@ -102,8 +162,8 @@ namespace BWolf.MazeGeneration
         public void MarkAsExit(MazeSolvingService solvingService)
         {
             //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
-            List<SpriteRenderer> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
-            edgewalls[Random.Range(0, edgewalls.Count)].color = colorAsPassage;
+            List<MazeCellWall> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
+            edgewalls[Random.Range(0, edgewalls.Count)].Break();
 
             //show exit on cell
             ShowAsExitOrEntry(true, solvingService.ExitSprite);
@@ -115,9 +175,9 @@ namespace BWolf.MazeGeneration
         /// <param name="gridWidth"></param>
         /// <param name="gridHeight"></param>
         /// <returns></returns>
-        private List<SpriteRenderer> GetEdgeWalls(int gridWidth, int gridHeight)
+        private List<MazeCellWall> GetEdgeWalls(int gridWidth, int gridHeight)
         {
-            List<SpriteRenderer> edgewalls = new List<SpriteRenderer>();
+            List<MazeCellWall> edgewalls = new List<MazeCellWall>();
 
             if (MazeX == 0)
             {
@@ -144,35 +204,95 @@ namespace BWolf.MazeGeneration
             return edgewalls;
         }
 
-        /// <summary>
-        /// Links this cell with given cell by breaking its wall relative to it
-        /// </summary>
-        /// <param name="cell"></param>
-        public void Link(MazeCell cell)
+        public bool HasPassageTowardsCell(MazeCell cell)
         {
             if (cell.MazeY > MazeY)
             {
                 //cell is top position relative to this cell
-                topWall.color = colorAsPassage;
+                return topWall.IsBroken;
             }
             else if (cell.MazeY < MazeY)
             {
                 //cell is bottom position relative to this cell
-                bottomWall.color = colorAsPassage;
+                return bottomWall.IsBroken;
             }
             else if (cell.MazeX > MazeX)
             {
                 //cell is right position relative to this cell
-                rightWall.color = colorAsPassage;
+                return rightWall.IsBroken;
             }
             else if (cell.MazeX < MazeX)
             {
                 //cell is left position relative to this cell
-                leftWall.color = colorAsPassage;
+                return leftWall.IsBroken;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Creates a passage with given cell by breaking its wall relative to it
+        /// </summary>
+        /// <param name="cell"></param>
+        public void CreatePassage(MazeCell cell)
+        {
+            if (cell.MazeY > MazeY)
+            {
+                //cell is top position relative to this cell
+                topWall.Break();
+            }
+            else if (cell.MazeY < MazeY)
+            {
+                //cell is bottom position relative to this cell
+                bottomWall.Break();
+            }
+            else if (cell.MazeX > MazeX)
+            {
+                //cell is right position relative to this cell
+                rightWall.Break();
+            }
+            else if (cell.MazeX < MazeX)
+            {
+                //cell is left position relative to this cell
+                leftWall.Break();
             }
             else
             {
                 Debug.LogError($"Cell {name} is trying to link with itself :: this is not intended behaviour");
+            }
+        }
+
+        /// <summary>
+        /// Marks a wall as checked based on given cell relative to it
+        /// </summary>
+        /// <param name="cell"></param>
+        public void MarkWallAsChecked(MazeCell cell)
+        {
+            if (cell.MazeY > MazeY)
+            {
+                //cell is top position relative to this cell
+                topWall.MarkAsChecked();
+            }
+            else if (cell.MazeY < MazeY)
+            {
+                //cell is bottom position relative to this cell
+                bottomWall.MarkAsChecked();
+            }
+            else if (cell.MazeX > MazeX)
+            {
+                //cell is right position relative to this cell
+                rightWall.MarkAsChecked();
+            }
+            else if (cell.MazeX < MazeX)
+            {
+                //cell is left position relative to this cell
+                leftWall.MarkAsChecked();
+            }
+            else
+            {
+                Debug.LogError($"Cell {name} is trying to mark a wall as checked based on itself :: this is not intended behaviour");
             }
         }
 
@@ -282,7 +402,7 @@ namespace BWolf.MazeGeneration
         /// <param name="value"></param>
         public void ShowAsStep(bool value)
         {
-            step.SetActive(value);
+            stepIndicator.SetActive(value);
         }
 
         /// <summary>
@@ -290,8 +410,17 @@ namespace BWolf.MazeGeneration
         /// </summary>
         public void MarkAsVisited()
         {
-            spriteRenderer.color = colorAsPassage;
+            spriteRenderer.color = ColorAsPassage;
             IsVisited = true;
+        }
+
+        /// <summary>
+        /// Marks the maze cell as checked
+        /// </summary>
+        public void MarkAsChecked()
+        {
+            spriteRenderer.color = ColorAsChecked;
+            IsChecked = true;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BWolf.MazeGeneration;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +15,11 @@ namespace BWolf.MazeSolving
         private Vector2Int entry = Vector2Int.zero;
 
         [SerializeField]
-        private Vector2Int exit = new Vector2Int(2, 0);
+        private Vector2Int exit = Vector2Int.zero;
+
+        [Space]
+        [SerializeField]
+        private bool slowMode = true;
 
         [Header("Scene References")]
         [SerializeField]
@@ -54,6 +59,7 @@ namespace BWolf.MazeSolving
         }
 
         public bool IsSolving { get; private set; }
+        public bool HasSolvedMaze { get; private set; }
 
         private void Awake()
         {
@@ -63,6 +69,17 @@ namespace BWolf.MazeSolving
         private void CreateSolvers()
         {
             solvers.Add(Algorithm.DeadEndFilling, new DeadEndFillingSolver());
+
+            foreach (MazeSolver generator in solvers.Values)
+            {
+                generator.CompletedRoutine += OnSolvingRoutineCompleted;
+            }
+        }
+
+        private void OnSolvingRoutineCompleted()
+        {
+            IsSolving = false;
+            HasSolvedMaze = true;
         }
 
         /// <summary>
@@ -70,7 +87,7 @@ namespace BWolf.MazeSolving
         /// </summary>
         public void Solve()
         {
-            if (IsSolving || generationService.IsGenerating)
+            if (IsSolving || HasSolvedMaze || generationService.IsGenerating)
             {
                 return;
             }
@@ -84,7 +101,16 @@ namespace BWolf.MazeSolving
                 return;
             }
 
-            StartCoroutine(solvers[algorithm].SolveMazeRoutine(this));
+            if (slowMode)
+            {
+                IsSolving = true;
+                StartCoroutine(solvers[algorithm].SolveMazeRoutine(this));
+            }
+            else
+            {
+                solvers[algorithm].SolveMaze(this);
+                HasSolvedMaze = true;
+            }
         }
 
         /// <summary>
@@ -126,6 +152,12 @@ namespace BWolf.MazeSolving
         /// <returns></returns>
         private bool CreateExit()
         {
+            if (exit == entry)
+            {
+                Debug.LogError("Failed to create exit :: exit can not be at the same position as the entry");
+                return false;
+            }
+
             MazeCell[,] cells = generationService.Cells;
             int width = cells.GetLength(0);
             int height = cells.GetLength(1);
@@ -140,6 +172,37 @@ namespace BWolf.MazeSolving
                 cells[exit.x, exit.y].MarkAsExit(this);
                 return true;
             }
+        }
+
+        public List<MazeCell> GetNextCellsInPath(MazeCell cell)
+        {
+            List<MazeCell> cells = new List<MazeCell>();
+
+            MazeCell top = generationService.GetTopNeighbour(cell);
+            if (top != null && !top.IsChecked && cell.HasPassageTowardsCell(top))
+            {
+                cells.Add(top);
+            }
+
+            MazeCell bottom = generationService.GetBottomNeighbour(cell);
+            if (bottom != null && !bottom.IsChecked && cell.HasPassageTowardsCell(bottom))
+            {
+                cells.Add(bottom);
+            }
+
+            MazeCell left = generationService.GetLeftNeighbour(cell);
+            if (left != null && !left.IsChecked && cell.HasPassageTowardsCell(left))
+            {
+                cells.Add(left);
+            }
+
+            MazeCell right = generationService.GetRightNeighbour(cell);
+            if (right != null && !right.IsChecked && cell.HasPassageTowardsCell(right))
+            {
+                cells.Add(right);
+            }
+
+            return cells;
         }
 
         private enum Algorithm

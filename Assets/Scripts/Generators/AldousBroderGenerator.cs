@@ -37,9 +37,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomNeighbour.MarkAsVisited();
                     visited.Add(randomNeighbour);
 
-                    //link it to the current cell
-                    randomNeighbour.Link(currentCell);
-                    currentCell.Link(randomNeighbour);
+                    //create passage between current cell and neighbour
+                    randomNeighbour.CreatePassage(currentCell);
+                    currentCell.CreatePassage(randomNeighbour);
                 }
 
                 //set current cell to random neighbour to travel from it
@@ -79,9 +79,9 @@ namespace BWolf.MazeGeneration.Generators
                     randomNeighbour.MarkAsVisited();
                     visited.Add(randomNeighbour);
 
-                    //link it to the current cell
-                    randomNeighbour.Link(currentCell);
-                    currentCell.Link(randomNeighbour);
+                    //create passage between cell and neighbour
+                    randomNeighbour.CreatePassage(currentCell);
+                    currentCell.CreatePassage(randomNeighbour);
                 }
 
                 //set current cell to random neighbour to travel from it
