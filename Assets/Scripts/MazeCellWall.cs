@@ -33,6 +33,14 @@ namespace BWolf.MazeGeneration
         }
 
         /// <summary>
+        /// Marks the maze cell wall as part of the solution path of the maze
+        /// </summary>
+        public void MarkAsPartOfSolution()
+        {
+            spriteRenderer.color = MazeCell.ColorAsSolution;
+        }
+
+        /// <summary>
         /// Sets the default values for this maze cell wall
         /// </summary>
         public void SetDefaultValues()

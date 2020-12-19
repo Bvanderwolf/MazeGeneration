@@ -35,6 +35,7 @@ namespace BWolf.MazeGeneration
         public static readonly Color ColorAsPassage = Color.white;
         public static readonly Color ColorAsWall = Color.black;
         public static readonly Color ColorAsChecked = Color.grey;
+        public static readonly Color ColorAsSolution = Color.green;
 
         private static readonly Color colorAsStep = Color.red;
 
@@ -101,7 +102,7 @@ namespace BWolf.MazeGeneration
         {
             get
             {
-                return brokenWalls == 3 && checkedWalls == 0;
+                return brokenWalls - checkedWalls >= 3;
             }
         }
 
@@ -150,10 +151,14 @@ namespace BWolf.MazeGeneration
         {
             //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
             List<MazeCellWall> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
-            edgewalls[Random.Range(0, edgewalls.Count)].Break();
+            MazeCellWall wall = edgewalls[Random.Range(0, edgewalls.Count)];
+
+            //break the wall and mark it as part of the solution
+            wall.Break();
+            wall.MarkAsPartOfSolution();
 
             //show entry on cell
-            ShowAsExitOrEntry(true, solvingService.EntrySprite);
+            ShowAsExitOrEntry(true, solvingService.EntranceSprite);
         }
 
         /// <summary>
@@ -163,7 +168,11 @@ namespace BWolf.MazeGeneration
         {
             //pick a random edge wall to destroy accounting for cases of cells being in a corner of the maze
             List<MazeCellWall> edgewalls = GetEdgeWalls(solvingService.Cells.GetLength(0), solvingService.Cells.GetLength(1));
-            edgewalls[Random.Range(0, edgewalls.Count)].Break();
+            MazeCellWall wall = edgewalls[Random.Range(0, edgewalls.Count)];
+
+            //break the wall and mark it as part of the solution
+            wall.Break();
+            wall.MarkAsPartOfSolution();
 
             //show exit on cell
             ShowAsExitOrEntry(true, solvingService.ExitSprite);
@@ -297,6 +306,38 @@ namespace BWolf.MazeGeneration
         }
 
         /// <summary>
+        /// Marks a wall as part of the solution path of the maze based on given cell relative to it
+        /// </summary>
+        /// <param name="cell"></param>
+        public void MarkWallAsPartOfSolution(MazeCell cell)
+        {
+            if (cell.MazeY > MazeY)
+            {
+                //cell is top position relative to this cell
+                topWall.MarkAsPartOfSolution();
+            }
+            else if (cell.MazeY < MazeY)
+            {
+                //cell is bottom position relative to this cell
+                bottomWall.MarkAsPartOfSolution();
+            }
+            else if (cell.MazeX > MazeX)
+            {
+                //cell is right position relative to this cell
+                rightWall.MarkAsPartOfSolution();
+            }
+            else if (cell.MazeX < MazeX)
+            {
+                //cell is left position relative to this cell
+                leftWall.MarkAsPartOfSolution();
+            }
+            else
+            {
+                Debug.LogError($"Cell {name} is trying to mark a wall as checked based on itself :: this is not intended behaviour");
+            }
+        }
+
+        /// <summary>
         /// Sets the direction arrow rotation based on the relative position of given cell to this one
         /// </summary>
         /// <param name="cell"></param>
@@ -420,6 +461,15 @@ namespace BWolf.MazeGeneration
         public void MarkAsChecked()
         {
             spriteRenderer.color = ColorAsChecked;
+            IsChecked = true;
+        }
+
+        /// <summary>
+        /// Marks the maze cell as part of the solution path of the maze
+        /// </summary>
+        public void MarkAsPartOfSolution()
+        {
+            spriteRenderer.color = ColorAsSolution;
             IsChecked = true;
         }
     }

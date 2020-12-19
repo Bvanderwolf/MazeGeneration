@@ -1,5 +1,6 @@
 ﻿using BWolf.MazeGeneration.Generators;
 using BWolf.MazeSolving;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -99,6 +100,8 @@ namespace BWolf.MazeGeneration
         /// Returns whether a generator is currently at work generating the maze
         /// </summary>
         public bool IsGenerating { get; private set; }
+
+        public event Action OnGeneratedMaze;
 
         private void Awake()
         {
@@ -203,6 +206,7 @@ namespace BWolf.MazeGeneration
             else
             {
                 generators[algorithm].CreateMaze(this);
+                OnGeneratedMaze();
             }
         }
 
@@ -338,7 +342,7 @@ namespace BWolf.MazeGeneration
             inputFieldStartY.text = start.y.ToString();
         }
 
-        /// <summary>Resets the isGenerating flag</summary>
+        /// <summary>Resets the isGenerating flag and cycles through algorithms if autoplay and slowMode are on</summary>
         private void OnGenerationRoutineCompleted()
         {
             IsGenerating = false;
@@ -347,6 +351,10 @@ namespace BWolf.MazeGeneration
             {
                 CycleThroughAlgorithmValues(true);
                 Generate();
+            }
+            else
+            {
+                OnGeneratedMaze();
             }
         }
 

@@ -2425,10 +2425,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   algorithm: 0
-  entry: {x: 0, y: 0}
-  exit: {x: 5, y: 5}
+  entrance: {x: 0, y: 0}
+  exit: {x: 24, y: 13}
+  slowMode: 1
   generationService: {fileID: 1998413124}
-  entrySprite: {fileID: 21300000, guid: 973bca4a14ec7f24890a56427a72c406, type: 3}
+  entranceSprite: {fileID: 21300000, guid: 973bca4a14ec7f24890a56427a72c406, type: 3}
   exitSprite: {fileID: 21300000, guid: 64008f0f5a77bfa419725a117139662c, type: 3}
 --- !u!1 &1349341820
 GameObject:
