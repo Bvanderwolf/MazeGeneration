@@ -16,7 +16,7 @@ namespace BWolf.MazeGeneration.Generators
             List<MazeCell> visited = new List<MazeCell>();
 
             //set starting point
-            MazeCell startCell = service.StartCell;
+            MazeCell startCell = service.RootCell;
             startCell.MarkAsVisited();
             visited.Add(startCell);
 
@@ -58,7 +58,7 @@ namespace BWolf.MazeGeneration.Generators
             List<MazeCell> visited = new List<MazeCell>();
 
             //set starting point
-            MazeCell startCell = service.StartCell;
+            MazeCell startCell = service.RootCell;
             startCell.MarkAsVisited();
             visited.Add(startCell);
 

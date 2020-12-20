@@ -16,7 +16,7 @@ namespace BWolf.MazeGeneration
 
         [Space]
         [SerializeField, Tooltip("start coordinates of the maze generation for generators that use it")]
-        private Vector2Int start = Vector2Int.zero;
+        private Vector2Int root = Vector2Int.zero;
 
         [Space]
         [SerializeField]
@@ -44,10 +44,10 @@ namespace BWolf.MazeGeneration
         private InputField inputFieldHeight = null;
 
         [SerializeField]
-        private InputField inputFieldStartX = null;
+        private InputField inputFieldRootX = null;
 
         [SerializeField]
-        private InputField inputFieldStartY = null;
+        private InputField inputFieldRootY = null;
 
         [Space]
         [SerializeField]
@@ -78,11 +78,11 @@ namespace BWolf.MazeGeneration
         public MazeCell[,] Cells { get; private set; }
 
         /// <summary>
-        /// The starting cell based on the stored start x and y values
+        /// The starting cell for maze generation based on the stored root x and y values
         /// </summary>
-        public MazeCell StartCell
+        public MazeCell RootCell
         {
-            get { return Cells[start.x, start.y]; }
+            get { return Cells[root.x, root.y]; }
         }
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace BWolf.MazeGeneration
             inputFieldWidth.onEndEdit.RemoveListener(OnWidthEndEdit);
             inputFieldHeight.onEndEdit.RemoveListener(OnHeightEndEdit);
 
-            inputFieldStartX.onEndEdit.RemoveListener(OnStartXEndEdit);
-            inputFieldStartY.onEndEdit.RemoveListener(OnStartYEndEdit);
+            inputFieldRootX.onEndEdit.RemoveListener(OnRootXEndEdit);
+            inputFieldRootY.onEndEdit.RemoveListener(OnRootYEndEdit);
 
             toggleSlowMode.onValueChanged.RemoveListener(OnSlowModeToggled);
             toggleAutoPlay.onValueChanged.RemoveListener(OnAutoPlayToggled);
@@ -141,8 +141,8 @@ namespace BWolf.MazeGeneration
             inputFieldWidth.onEndEdit.AddListener(OnWidthEndEdit);
             inputFieldHeight.onEndEdit.AddListener(OnHeightEndEdit);
 
-            inputFieldStartX.onEndEdit.AddListener(OnStartXEndEdit);
-            inputFieldStartY.onEndEdit.AddListener(OnStartYEndEdit);
+            inputFieldRootX.onEndEdit.AddListener(OnRootXEndEdit);
+            inputFieldRootY.onEndEdit.AddListener(OnRootYEndEdit);
 
             toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
             toggleAutoPlay.onValueChanged.AddListener(OnAutoPlayToggled);
@@ -195,9 +195,9 @@ namespace BWolf.MazeGeneration
                 CreateMazeCells();
             }
 
-            if (start.x < 0 || start.x >= Cells.GetLength(0) || start.y < 0 || start.y >= Cells.GetLength(1))
+            if (root.x < 0 || root.x >= Cells.GetLength(0) || root.y < 0 || root.y >= Cells.GetLength(1))
             {
-                Debug.LogError("Generation process halted :: The start position needs to be inside the grid");
+                Debug.LogError("Generation process halted :: The root position needs to be inside the grid");
                 return;
             }
 
@@ -242,26 +242,26 @@ namespace BWolf.MazeGeneration
         }
 
         /// <summary>
-        /// Stores given user start x input
+        /// Stores given user root x input
         /// </summary>
         /// <param name="value"></param>
-        private void OnStartXEndEdit(string value)
+        private void OnRootXEndEdit(string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
-                start.x = int.Parse(value);
+                root.x = int.Parse(value);
             }
         }
 
         /// <summary>
-        /// Stores given user start y input
+        /// Stores given user root y input
         /// </summary>
         /// <param name="value"></param>
-        private void OnStartYEndEdit(string value)
+        private void OnRootYEndEdit(string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
-                start.y = int.Parse(value);
+                root.y = int.Parse(value);
             }
         }
 
@@ -345,8 +345,8 @@ namespace BWolf.MazeGeneration
             inputFieldWidth.text = width.ToString();
             inputFieldHeight.text = height.ToString();
 
-            inputFieldStartX.text = start.x.ToString();
-            inputFieldStartY.text = start.y.ToString();
+            inputFieldRootX.text = root.x.ToString();
+            inputFieldRootY.text = root.y.ToString();
         }
 
         /// <summary>Resets the isGenerating flag and cycles through algorithms if autoplay and slowMode are on</summary>

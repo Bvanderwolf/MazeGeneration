@@ -1342,7 +1342,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: START
+  m_Text: ROOT
 --- !u!222 &292869502
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4996,7 +4996,7 @@ GameObject:
   - component: {fileID: 1410059386}
   - component: {fileID: 1410059385}
   m_Layer: 5
-  m_Name: Start
+  m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6496,7 +6496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   algorithm: 0
-  start: {x: 0, y: 0}
+  root: {x: 0, y: 0}
   width: 25
   height: 14
   slowMode: 0
@@ -6504,8 +6504,8 @@ MonoBehaviour:
   debugMode: 0
   inputFieldWidth: {fileID: 57591726}
   inputFieldHeight: {fileID: 1125595381}
-  inputFieldStartX: {fileID: 90918937}
-  inputFieldStartY: {fileID: 1901154356}
+  inputFieldRootX: {fileID: 90918937}
+  inputFieldRootY: {fileID: 1901154356}
   toggleSlowMode: {fileID: 1094155639}
   toggleAutoPlay: {fileID: 1349341822}
   toggleDebugMode: {fileID: 918709958}

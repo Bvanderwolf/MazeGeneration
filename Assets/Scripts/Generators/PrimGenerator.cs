@@ -18,7 +18,7 @@ namespace BWolf.MazeGeneration.Generators
             List<MazeCell> frontier = new List<MazeCell>();
 
             //set starting point
-            MazeCell startCell = service.StartCell;
+            MazeCell startCell = service.RootCell;
             startCell.MarkAsVisited();
 
             //add neighbours of starting cell to frontier
@@ -64,7 +64,7 @@ namespace BWolf.MazeGeneration.Generators
             List<MazeCell> frontier = new List<MazeCell>();
 
             //set starting point
-            MazeCell startCell = service.StartCell;
+            MazeCell startCell = service.RootCell;
             startCell.MarkAsVisited();
 
             //add neighbours of starting cell to frontier
