@@ -374,18 +374,28 @@ namespace BWolf.MazeGeneration
             else if (cell.MazeY < MazeY)
             {
                 //cell is bottom position relative to this cell
-                directionArrow.localEulerAngles = new Vector3(0, 0, 180);
+                directionArrow.localEulerAngles = new Vector3(0, 0, 180.0f);
             }
             else if (cell.MazeX > MazeX)
             {
                 //cell is right position relative to this cell
-                directionArrow.localEulerAngles = new Vector3(0, 0, -90);
+                directionArrow.localEulerAngles = new Vector3(0, 0, -90.0f);
             }
             else if (cell.MazeX < MazeX)
             {
                 //cell is left position relative to this cell
-                directionArrow.localEulerAngles = new Vector3(0, 0, 90);
+                directionArrow.localEulerAngles = new Vector3(0, 0, 90.0f);
             }
+        }
+
+        /// <summary>
+        /// Sets the direction arrow rotation based on given direction vector
+        /// </summary>
+        /// <param name="cell"></param>
+        public void SetDirectionArrow(Vector2Int direction)
+        {
+            float angle = Vector2.SignedAngle(Vector2.up, new Vector2(direction.x, direction.y));
+            directionArrow.localEulerAngles = new Vector3(0, 0, angle);
         }
 
         /// <summary>

@@ -22,6 +22,9 @@ namespace BWolf.MazeSolving
         [SerializeField, Tooltip("If slow mode is set to true, the solver will wait a video frame each step resulting in a slower process")]
         private bool slowMode = true;
 
+        [SerializeField, Tooltip("If debug mode is set to true, some algorithms make cells show additional features")]
+        private bool debugMode = false;
+
         [Header("Scene References")]
         [SerializeField]
         private Toggle toggleSlowMode = null;
@@ -98,6 +101,17 @@ namespace BWolf.MazeSolving
             }
         }
 
+        /// <summary>
+        /// If debug mode is set to true, some algorithms make cells show additional features
+        /// </summary>
+        public bool DebugMode
+        {
+            get
+            {
+                return debugMode;
+            }
+        }
+
         public bool IsSolving { get; private set; }
         public bool HasSolvedMaze { get; private set; }
 
@@ -129,6 +143,7 @@ namespace BWolf.MazeSolving
         {
             solvers.Add(Algorithm.DeadEndFilling, new DeadEndFillingSolver());
             solvers.Add(Algorithm.RecursiveBacktracking, new RecursiveBacktrackingSolver());
+            solvers.Add(Algorithm.WallFollower, new WallFollowerSolver());
 
             foreach (MazeSolver generator in solvers.Values)
             {
@@ -284,7 +299,7 @@ namespace BWolf.MazeSolving
             if (forward)
             {
                 int next = (int)algorithm + 1;
-                if (next == System.Enum.GetValues(typeof(Algorithm)).Length)
+                if (next == Enum.GetValues(typeof(Algorithm)).Length)
                 {
                     next = 0;
                 }
@@ -296,7 +311,7 @@ namespace BWolf.MazeSolving
                 int previous = (int)algorithm - 1;
                 if (previous < 0)
                 {
-                    previous = System.Enum.GetValues(typeof(Algorithm)).Length - 1;
+                    previous = Enum.GetValues(typeof(Algorithm)).Length - 1;
                 }
 
                 algorithm = (Algorithm)previous;
@@ -342,12 +357,51 @@ namespace BWolf.MazeSolving
         }
 
         /// <summary>
+        /// Sets the given next cell in path if it can find it relative to given cell's direction. Returns whether it succeeded
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <param name="direction"></param>
+        /// <param name="nextCellInPath"></param>
+        /// <returns></returns>
+        public bool GetNextCellInPathRelative(MazeCell cell, Vector2Int direction, ref MazeCell nextCellInPath)
+        {
+            MazeCell validCellNextInPath = null;
+            if (direction == Vector2Int.up)
+            {
+                validCellNextInPath = generationService.GetTopNeighbour(cell);
+            }
+            else if (direction == Vector2Int.down)
+            {
+                validCellNextInPath = generationService.GetBottomNeighbour(cell);
+            }
+            else if (direction == Vector2Int.right)
+            {
+                validCellNextInPath = generationService.GetRightNeighbour(cell);
+            }
+            else if (direction == Vector2Int.left)
+            {
+                validCellNextInPath = generationService.GetLeftNeighbour(cell);
+            }
+
+            if (validCellNextInPath != null && cell.HasPassageTowardsCell(validCellNextInPath))
+            {
+                nextCellInPath = validCellNextInPath;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// The algorithms used for solving the generated mazes
         /// </summary>
         private enum Algorithm
         {
             DeadEndFilling,
-            RecursiveBacktracking
+            RecursiveBacktracking,
+            WallFollower
         }
     }
 }
