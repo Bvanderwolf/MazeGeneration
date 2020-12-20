@@ -29,6 +29,22 @@ namespace BWolf.MazeSolving
         [SerializeField]
         private Toggle toggleSlowMode = null;
 
+        [SerializeField]
+        private Toggle toggleDebugMode = null;
+
+        [Space]
+        [SerializeField]
+        private InputField inputFieldEntranceX = null;
+
+        [SerializeField]
+        private InputField inputFieldEntranceY = null;
+
+        [SerializeField]
+        private InputField inputFieldExitX = null;
+
+        [SerializeField]
+        private InputField inputFieldExitY = null;
+
         [Space]
         [SerializeField]
         private Text textAlgorithm = null;
@@ -127,6 +143,7 @@ namespace BWolf.MazeSolving
         {
             UpdateAlgorithmText();
             UpdateToggles();
+            UpdateInputFields();
         }
 
         private void OnDestroy()
@@ -134,6 +151,13 @@ namespace BWolf.MazeSolving
             generationService.OnGeneratedMaze -= OnMazeGenerated;
 
             toggleSlowMode.onValueChanged.RemoveListener(OnSlowModeToggled);
+            toggleDebugMode.onValueChanged.RemoveListener(OnDebugModeToggled);
+
+            inputFieldEntranceX.onEndEdit.RemoveListener(OnEntranceXEndEdit);
+            inputFieldEntranceY.onEndEdit.RemoveListener(OnEntranceYEndEdit);
+
+            inputFieldExitX.onEndEdit.RemoveListener(OnExitXEndEdit);
+            inputFieldExitY.onEndEdit.RemoveListener(OnExitYEndEdit);
         }
 
         /// <summary>
@@ -151,9 +175,19 @@ namespace BWolf.MazeSolving
             }
         }
 
+        /// <summary>
+        /// Sets up the input field values and listeners
+        /// </summary>
         private void InitializeUserInterface()
         {
             toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
+            toggleDebugMode.onValueChanged.AddListener(OnDebugModeToggled);
+
+            inputFieldEntranceX.onEndEdit.AddListener(OnEntranceXEndEdit);
+            inputFieldEntranceY.onEndEdit.AddListener(OnEntranceYEndEdit);
+
+            inputFieldExitX.onEndEdit.AddListener(OnExitXEndEdit);
+            inputFieldExitY.onEndEdit.AddListener(OnExitYEndEdit);
         }
 
         /// <summary>
@@ -275,11 +309,80 @@ namespace BWolf.MazeSolving
         }
 
         /// <summary>
+        /// Updates the debugMode function
+        /// </summary>
+        private void OnDebugModeToggled(bool value)
+        {
+            debugMode = value;
+        }
+
+        /// <summary>
+        /// Stores given user width input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnEntranceXEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                entrance.x = int.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Stores given user height input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnEntranceYEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                entrance.y = int.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Stores given user start x input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnExitXEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                exit.x = int.Parse(value);
+            }
+        }
+
+        /// <summary>
+        /// Stores given user start y input
+        /// </summary>
+        /// <param name="value"></param>
+        private void OnExitYEndEdit(string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                exit.y = int.Parse(value);
+            }
+        }
+
+        /// <summary>
         /// Updates the shown toggle states in the User Interface
         /// </summary>
         private void UpdateToggles()
         {
             toggleSlowMode.isOn = slowMode;
+            toggleDebugMode.isOn = debugMode;
+        }
+
+        /// <summary>
+        /// Updates the shown input field text in the User Interface
+        /// </summary>
+        private void UpdateInputFields()
+        {
+            inputFieldEntranceX.text = entrance.x.ToString();
+            inputFieldEntranceY.text = entrance.x.ToString();
+
+            inputFieldExitX.text = exit.x.ToString();
+            inputFieldExitY.text = exit.y.ToString();
         }
 
         /// <summary>
