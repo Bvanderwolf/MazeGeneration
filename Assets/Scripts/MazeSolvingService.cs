@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BWolf.MazeSolving
 {
@@ -22,6 +23,14 @@ namespace BWolf.MazeSolving
         private bool slowMode = true;
 
         [Header("Scene References")]
+        [SerializeField]
+        private Toggle toggleSlowMode = null;
+
+        [Space]
+        [SerializeField]
+        private Text textAlgorithm = null;
+
+        [Space]
         [SerializeField]
         private MazeGenerationService generationService = null;
 
@@ -94,9 +103,23 @@ namespace BWolf.MazeSolving
 
         private void Awake()
         {
+            InitializeUserInterface();
             CreateSolvers();
 
             generationService.OnGeneratedMaze += OnMazeGenerated;
+        }
+
+        private void OnValidate()
+        {
+            UpdateAlgorithmText();
+            UpdateToggles();
+        }
+
+        private void OnDestroy()
+        {
+            generationService.OnGeneratedMaze -= OnMazeGenerated;
+
+            toggleSlowMode.onValueChanged.RemoveListener(OnSlowModeToggled);
         }
 
         /// <summary>
@@ -105,6 +128,7 @@ namespace BWolf.MazeSolving
         private void CreateSolvers()
         {
             solvers.Add(Algorithm.DeadEndFilling, new DeadEndFillingSolver());
+            solvers.Add(Algorithm.RecursiveBacktracking, new RecursiveBacktrackingSolver());
 
             foreach (MazeSolver generator in solvers.Values)
             {
@@ -112,21 +136,9 @@ namespace BWolf.MazeSolving
             }
         }
 
-        /// <summary>
-        /// Resets the IsSolving flag and makes sure the same maze can't be re-solved again
-        /// </summary>
-        private void OnSolvingRoutineCompleted()
+        private void InitializeUserInterface()
         {
-            IsSolving = false;
-            HasSolvedMaze = true;
-        }
-
-        /// <summary>
-        /// Makes sure the maze generated can be solved
-        /// </summary>
-        private void OnMazeGenerated()
-        {
-            HasSolvedMaze = false;
+            toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
         }
 
         /// <summary>
@@ -223,6 +235,77 @@ namespace BWolf.MazeSolving
         }
 
         /// <summary>
+        /// Resets the IsSolving flag and makes sure the same maze can't be re-solved again
+        /// </summary>
+        private void OnSolvingRoutineCompleted()
+        {
+            IsSolving = false;
+            HasSolvedMaze = true;
+        }
+
+        /// <summary>
+        /// Makes sure the maze generated can be solved
+        /// </summary>
+        private void OnMazeGenerated()
+        {
+            HasSolvedMaze = false;
+        }
+
+        /// <summary>
+        /// Updates the slow mode function
+        /// </summary>
+        private void OnSlowModeToggled(bool value)
+        {
+            slowMode = value;
+        }
+
+        /// <summary>
+        /// Updates the shown toggle states in the User Interface
+        /// </summary>
+        private void UpdateToggles()
+        {
+            toggleSlowMode.isOn = slowMode;
+        }
+
+        /// <summary>
+        /// Updates the shown algorithm text in the User Interface
+        /// </summary>
+        private void UpdateAlgorithmText()
+        {
+            textAlgorithm.text = algorithm.ToString();
+        }
+
+        /// <summary>
+        /// Cycles through the algorithm values to set the algorithm used for generation either to the next or previous one based on given "forward" value
+        /// </summary>
+        /// <param name="forward"></param>
+        public void CycleThroughAlgorithmValues(bool forward)
+        {
+            if (forward)
+            {
+                int next = (int)algorithm + 1;
+                if (next == System.Enum.GetValues(typeof(Algorithm)).Length)
+                {
+                    next = 0;
+                }
+
+                algorithm = (Algorithm)next;
+            }
+            else
+            {
+                int previous = (int)algorithm - 1;
+                if (previous < 0)
+                {
+                    previous = System.Enum.GetValues(typeof(Algorithm)).Length - 1;
+                }
+
+                algorithm = (Algorithm)previous;
+            }
+
+            UpdateAlgorithmText();
+        }
+
+        /// <summary>
         /// Returns the cells that are adjecent to given cell, are not checked yet and are not blocked by a wall
         /// </summary>
         /// <param name="cell"></param>
@@ -263,7 +346,8 @@ namespace BWolf.MazeSolving
         /// </summary>
         private enum Algorithm
         {
-            DeadEndFilling
+            DeadEndFilling,
+            RecursiveBacktracking
         }
     }
 }

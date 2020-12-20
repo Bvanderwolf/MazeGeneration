@@ -273,6 +273,29 @@ namespace BWolf.MazeGeneration
             }
         }
 
+        public void MarkBrokenWallsAsChecked()
+        {
+            if (topWall.IsBroken)
+            {
+                topWall.MarkAsChecked();
+            }
+
+            if (bottomWall.IsBroken)
+            {
+                bottomWall.MarkAsChecked();
+            }
+
+            if (leftWall.IsBroken)
+            {
+                leftWall.MarkAsChecked();
+            }
+
+            if (rightWall.IsBroken)
+            {
+                rightWall.MarkAsChecked();
+            }
+        }
+
         /// <summary>
         /// Marks a wall as checked based on given cell relative to it
         /// </summary>

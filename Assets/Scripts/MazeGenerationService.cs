@@ -114,6 +114,13 @@ namespace BWolf.MazeGeneration
         {
             inputFieldWidth.onEndEdit.RemoveListener(OnWidthEndEdit);
             inputFieldHeight.onEndEdit.RemoveListener(OnHeightEndEdit);
+
+            inputFieldStartX.onEndEdit.RemoveListener(OnStartXEndEdit);
+            inputFieldStartY.onEndEdit.RemoveListener(OnStartYEndEdit);
+
+            toggleSlowMode.onValueChanged.RemoveListener(OnSlowModeToggled);
+            toggleAutoPlay.onValueChanged.RemoveListener(OnAutoPlayToggled);
+            toggleDebugMode.onValueChanged.RemoveListener(OnDebugModeToggled);
         }
 
         private void OnValidate()
@@ -291,7 +298,7 @@ namespace BWolf.MazeGeneration
             if (forward)
             {
                 int next = (int)algorithm + 1;
-                if (next == System.Enum.GetValues(typeof(Algorithm)).Length)
+                if (next == Enum.GetValues(typeof(Algorithm)).Length)
                 {
                     next = 0;
                 }
@@ -303,7 +310,7 @@ namespace BWolf.MazeGeneration
                 int previous = (int)algorithm - 1;
                 if (previous < 0)
                 {
-                    previous = System.Enum.GetValues(typeof(Algorithm)).Length - 1;
+                    previous = Enum.GetValues(typeof(Algorithm)).Length - 1;
                 }
 
                 algorithm = (Algorithm)previous;
