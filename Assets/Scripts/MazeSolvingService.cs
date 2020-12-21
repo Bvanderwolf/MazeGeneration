@@ -25,12 +25,18 @@ namespace BWolf.MazeSolving
         [SerializeField, Tooltip("If debug mode is set to true, some algorithms make cells show additional features")]
         private bool debugMode = false;
 
+        [SerializeField]
+        private bool autoPlay = false;
+
         [Header("Scene References")]
         [SerializeField]
         private Toggle toggleSlowMode = null;
 
         [SerializeField]
         private Toggle toggleDebugMode = null;
+
+        [SerializeField]
+        private Toggle toggleAutoPlay = null;
 
         [Space]
         [SerializeField]
@@ -129,14 +135,11 @@ namespace BWolf.MazeSolving
         }
 
         public bool IsSolving { get; private set; }
-        public bool HasSolvedMaze { get; private set; }
 
         private void Awake()
         {
             InitializeUserInterface();
             CreateSolvers();
-
-            generationService.OnGeneratedMaze += OnMazeGenerated;
         }
 
         private void OnValidate()
@@ -148,10 +151,9 @@ namespace BWolf.MazeSolving
 
         private void OnDestroy()
         {
-            generationService.OnGeneratedMaze -= OnMazeGenerated;
-
             toggleSlowMode.onValueChanged.RemoveListener(OnSlowModeToggled);
             toggleDebugMode.onValueChanged.RemoveListener(OnDebugModeToggled);
+            toggleAutoPlay.onValueChanged.RemoveListener(OnAutoPlayToggled);
 
             inputFieldEntranceX.onEndEdit.RemoveListener(OnEntranceXEndEdit);
             inputFieldEntranceY.onEndEdit.RemoveListener(OnEntranceYEndEdit);
@@ -182,6 +184,7 @@ namespace BWolf.MazeSolving
         {
             toggleSlowMode.onValueChanged.AddListener(OnSlowModeToggled);
             toggleDebugMode.onValueChanged.AddListener(OnDebugModeToggled);
+            toggleAutoPlay.onValueChanged.AddListener(OnAutoPlayToggled);
 
             inputFieldEntranceX.onEndEdit.AddListener(OnEntranceXEndEdit);
             inputFieldEntranceY.onEndEdit.AddListener(OnEntranceYEndEdit);
@@ -195,13 +198,14 @@ namespace BWolf.MazeSolving
         /// </summary>
         public void Solve()
         {
-            if (IsSolving || HasSolvedMaze || generationService.IsGenerating)
+            if (IsSolving || generationService.IsGenerating)
             {
                 return;
             }
 
-            //reset all entries and exits currently in the maze
+            //reset cells used for solving currently in the maze
             ResetEntriesAndExits();
+            ResetCheckedCells();
 
             //try creating a new entry and a new exit
             if (!CreateEntry() || !CreateExit())
@@ -218,7 +222,6 @@ namespace BWolf.MazeSolving
             else
             {
                 solvers[algorithm].SolveMaze(this);
-                HasSolvedMaze = true;
             }
         }
 
@@ -230,6 +233,18 @@ namespace BWolf.MazeSolving
             foreach (MazeCell cell in generationService.Cells)
             {
                 cell.ShowAsExitOrEntry(false, null);
+            }
+        }
+
+        /// <summary>
+        /// Resets the checked cells in the maze by re-marking them as visited
+        /// </summary>
+        private void ResetCheckedCells()
+        {
+            foreach (MazeCell cell in generationService.Cells)
+            {
+                cell.MarkAsVisited();
+                cell.ResetBrokenWalls();
             }
         }
 
@@ -289,15 +304,12 @@ namespace BWolf.MazeSolving
         private void OnSolvingRoutineCompleted()
         {
             IsSolving = false;
-            HasSolvedMaze = true;
-        }
 
-        /// <summary>
-        /// Makes sure the maze generated can be solved
-        /// </summary>
-        private void OnMazeGenerated()
-        {
-            HasSolvedMaze = false;
+            if (autoPlay && slowMode)
+            {
+                CycleThroughAlgorithmValues(true);
+                Solve();
+            }
         }
 
         /// <summary>
@@ -314,6 +326,14 @@ namespace BWolf.MazeSolving
         private void OnDebugModeToggled(bool value)
         {
             debugMode = value;
+        }
+
+        /// <summary>
+        /// Updates the autoplay function
+        /// </summary>
+        private void OnAutoPlayToggled(bool value)
+        {
+            autoPlay = value;
         }
 
         /// <summary>
@@ -371,6 +391,7 @@ namespace BWolf.MazeSolving
         {
             toggleSlowMode.isOn = slowMode;
             toggleDebugMode.isOn = debugMode;
+            toggleAutoPlay.isOn = autoPlay;
         }
 
         /// <summary>

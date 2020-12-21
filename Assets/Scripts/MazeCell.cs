@@ -8,7 +8,7 @@ namespace BWolf.MazeGeneration
     {
         [Header("Debug")]
         [SerializeField]
-        private TextMesh setNumberText = null;
+        private TextMesh numberValueText = null;
 
         [SerializeField]
         private Transform directionArrow = null;
@@ -44,7 +44,7 @@ namespace BWolf.MazeGeneration
         public int MazeX { get; private set; }
         public int MazeY { get; private set; }
 
-        public int SetNumber { get; private set; }
+        public int NumberValue { get; private set; }
 
         public bool IsVisited { get; private set; }
         public bool IsChecked { get; private set; }
@@ -126,8 +126,8 @@ namespace BWolf.MazeGeneration
             rightWall.SetDefaultValues();
             leftWall.SetDefaultValues();
 
-            SetSetNumber(0);
-            ShowSetNumber(false);
+            SetNumberValue(0);
+            ShowNumberValue(false);
             ShowDirectionArrow(false);
             ShowAsStep(false);
             ShowAsExitOrEntry(false, null);
@@ -273,6 +273,9 @@ namespace BWolf.MazeGeneration
             }
         }
 
+        /// <summary>
+        /// Marks all broken walls of this cell as checked
+        /// </summary>
         public void MarkBrokenWallsAsChecked()
         {
             if (topWall.IsBroken)
@@ -293,6 +296,32 @@ namespace BWolf.MazeGeneration
             if (rightWall.IsBroken)
             {
                 rightWall.MarkAsChecked();
+            }
+        }
+
+        /// <summary>
+        /// Resets broken walls to their original visited state
+        /// </summary>
+        public void ResetBrokenWalls()
+        {
+            if (topWall.IsBroken)
+            {
+                topWall.Break();
+            }
+
+            if (bottomWall.IsBroken)
+            {
+                bottomWall.Break();
+            }
+
+            if (leftWall.IsBroken)
+            {
+                leftWall.Break();
+            }
+
+            if (rightWall.IsBroken)
+            {
+                rightWall.Break();
             }
         }
 
@@ -452,22 +481,22 @@ namespace BWolf.MazeGeneration
         }
 
         /// <summary>
-        /// Sets the SetNumber value for this maze cell used in Kruskal's and Eller's Algorithm
+        /// Sets the number value for this maze cell used in generation and solving Algorithms
         /// </summary>
         /// <param name="number"></param>
-        public void SetSetNumber(int number)
+        public void SetNumberValue(int number)
         {
-            SetNumber = number;
-            setNumberText.text = SetNumber.ToString();
+            NumberValue = number;
+            numberValueText.text = number != int.MaxValue ? NumberValue.ToString() : "Max";
         }
 
         /// <summary>
-        /// Either shows or hides set number text based on given value
+        /// Either shows or hides number value text based on given value
         /// </summary>
         /// <param name="value"></param>
-        public void ShowSetNumber(bool value)
+        public void ShowNumberValue(bool value)
         {
-            setNumberText.gameObject.SetActive(value);
+            numberValueText.gameObject.SetActive(value);
         }
 
         /// <summary>
@@ -486,6 +515,7 @@ namespace BWolf.MazeGeneration
         {
             spriteRenderer.color = ColorAsPassage;
             IsVisited = true;
+            IsChecked = false;
         }
 
         /// <summary>

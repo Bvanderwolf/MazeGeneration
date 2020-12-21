@@ -21,6 +21,7 @@ namespace BWolf.MazeGeneration
         {
             spriteRenderer.color = MazeCell.ColorAsPassage;
             IsBroken = true;
+            IsChecked = false;
         }
 
         /// <summary>

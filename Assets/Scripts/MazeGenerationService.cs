@@ -101,8 +101,6 @@ namespace BWolf.MazeGeneration
         /// </summary>
         public bool IsGenerating { get; private set; }
 
-        public event Action OnGeneratedMaze;
-
         private void Awake()
         {
             InitializeUserInterface();
@@ -213,7 +211,6 @@ namespace BWolf.MazeGeneration
             else
             {
                 generators[algorithm].CreateMaze(this);
-                OnGeneratedMaze();
             }
         }
 
@@ -359,10 +356,6 @@ namespace BWolf.MazeGeneration
                 CycleThroughAlgorithmValues(true);
                 Generate();
             }
-            else
-            {
-                OnGeneratedMaze();
-            }
         }
 
         /// <summary>Returns a list of unvisited cells adjecent to given cell</summary>
@@ -435,25 +428,25 @@ namespace BWolf.MazeGeneration
             List<MazeCell> cells = new List<MazeCell>();
 
             MazeCell top = GetTopNeighbour(cell);
-            if (top != null && top.SetNumber != cell.SetNumber)
+            if (top != null && top.NumberValue != cell.NumberValue)
             {
                 cells.Add(top);
             }
 
             MazeCell bottom = GetBottomNeighbour(cell);
-            if (bottom != null && bottom.SetNumber != cell.SetNumber)
+            if (bottom != null && bottom.NumberValue != cell.NumberValue)
             {
                 cells.Add(bottom);
             }
 
             MazeCell left = GetLeftNeighbour(cell);
-            if (left != null && left.SetNumber != cell.SetNumber)
+            if (left != null && left.NumberValue != cell.NumberValue)
             {
                 cells.Add(left);
             }
 
             MazeCell right = GetRightNeighbour(cell);
-            if (right != null && right.SetNumber != cell.SetNumber)
+            if (right != null && right.NumberValue != cell.NumberValue)
             {
                 cells.Add(right);
             }

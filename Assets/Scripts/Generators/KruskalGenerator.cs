@@ -41,10 +41,10 @@ namespace BWolf.MazeGeneration.Generators
                     randomCell.CreatePassage(randomNeighbour);
 
                     //all the cells belonging to the set the random neighbour belongs to are overtaken by the random cell's set
-                    MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();
+                    MazeCell[] set = cells.Where(c => c.NumberValue == randomNeighbour.NumberValue).ToArray();
                     foreach (MazeCell overtakableCell in set)
                     {
-                        overtakableCell.SetSetNumber(randomCell.SetNumber);
+                        overtakableCell.SetNumberValue(randomCell.NumberValue);
                     }
                 }
                 else
@@ -90,10 +90,10 @@ namespace BWolf.MazeGeneration.Generators
                     randomCell.CreatePassage(randomNeighbour);
 
                     //all the cells belonging to the set the random neighbour belongs to are overtaken by the random cell's set
-                    MazeCell[] set = cells.Where(c => c.SetNumber == randomNeighbour.SetNumber).ToArray();
+                    MazeCell[] set = cells.Where(c => c.NumberValue == randomNeighbour.NumberValue).ToArray();
                     foreach (MazeCell overtakableCell in set)
                     {
-                        overtakableCell.SetSetNumber(randomCell.SetNumber);
+                        overtakableCell.SetNumberValue(randomCell.NumberValue);
                     }
                 }
                 else
@@ -117,8 +117,8 @@ namespace BWolf.MazeGeneration.Generators
             int count = 0;
             foreach (MazeCell cell in cells)
             {
-                cell.SetSetNumber(count++);
-                cell.ShowSetNumber(debugMode);
+                cell.SetNumberValue(count++);
+                cell.ShowNumberValue(debugMode);
             }
         }
     }

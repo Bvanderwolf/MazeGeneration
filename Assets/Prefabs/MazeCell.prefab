@@ -604,10 +604,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ab5d6111790c4e43a68db9d1bf10aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setNumberText: {fileID: 5315230305188048747}
+  numberValueText: {fileID: 5315230305188048747}
   directionArrow: {fileID: 7481021432218948758}
   stepIndicator: {fileID: 7279829235087403643}
-  checkedIndicator: {fileID: 0}
   exitOrEntryIndicator: {fileID: 2010623113712354846}
   topWall: {fileID: 2493479487185639183}
   bottomWall: {fileID: 6695758076831174185}
@@ -625,7 +624,7 @@ GameObject:
   - component: {fileID: 5998157012045380214}
   - component: {fileID: 5315230305188048747}
   m_Layer: 0
-  m_Name: SetNumber
+  m_Name: NumberValue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
